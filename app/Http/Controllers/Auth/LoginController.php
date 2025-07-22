@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
-
     protected $redirectTo = '/dashboard';
 
     public function __construct()
@@ -23,15 +20,33 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    protected function authenticated(Request $request, $user)
+    public function login(Request $request)
     {
-        $user->update(['last_login_at' => now()]);
-        
-        return redirect()->intended($this->redirectTo);
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
+            
+            Auth::user()->update(['last_login_at' => now()]);
+            
+            return redirect()->intended($this->redirectTo);
+        }
+
+        return back()->withErrors([
+            'email' => '邮箱或密码错误。',
+        ]);
     }
 
-    public function username()
+    public function logout(Request $request)
     {
-        return 'email';
+        Auth::logout();
+        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect('/');
     }
 }
