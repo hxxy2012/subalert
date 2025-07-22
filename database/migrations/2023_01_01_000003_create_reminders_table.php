@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('subscription_id')->constrained()->onDelete('cascade');
             $table->integer('remind_days')->default(7);
-            $table->set('remind_type', ['email', 'feishu', 'wechat', 'system'])->default('email');
+            $table->enum('remind_type', ['email', 'feishu', 'wechat', 'system'])->default('email');
             $table->timestamp('remind_at');
             $table->enum('status', ['pending', 'sent', 'read', 'failed'])->default('pending');
             $table->timestamp('sent_at')->nullable();
