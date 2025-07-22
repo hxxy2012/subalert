@@ -1,0 +1,9 @@
+# SubAlert 定时任务配置
+# 每分钟检查并发送提醒
+* * * * * cd /var/www/html && php artisan reminders:send >> /var/log/cron.log 2>&1
+
+# 每天凌晨清理旧的提醒记录
+0 0 * * * cd /var/www/html && php artisan reminders:cleanup >> /var/log/cron.log 2>&1
+
+# Laravel 默认调度器
+* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1

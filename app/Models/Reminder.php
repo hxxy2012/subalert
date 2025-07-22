@@ -12,17 +12,19 @@ class Reminder extends Model
     protected $fillable = [
         'user_id',
         'subscription_id',
-        'remind_days',
+        'remind_before_days',
         'remind_type',
         'remind_at',
         'status',
         'sent_at',
+        'read_at',
         'is_active',
     ];
 
     protected $casts = [
         'remind_at' => 'datetime',
         'sent_at' => 'datetime',
+        'read_at' => 'datetime',
         'is_active' => 'boolean',
     ];
 
